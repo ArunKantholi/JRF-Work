@@ -1,0 +1,31 @@
+import subprocess
+
+# Define the paths
+ghf_folder = '/home/arun/Desktop/test100/ghf'
+rhf_folder = '/home/arun/Desktop/test100/rhf'
+output_file = '/home/arun/Desktop/test100/energy_difference.txt'
+
+# Construct the grep command
+grep_command = f'grep "(pre-RSP) Total:" {ghf_folder}/*out {rhf_folder}/*out'
+
+# Execute the grep command and store the output
+grep_output = subprocess.check_output(grep_command, shell=True, text=True)
+
+# Extract values from grep output
+ghf_values = []
+rhf_values = []
+for line in grep_output.split('\n'):
+    if ghf_folder in line:
+        ghf_values.append(float(line.split()[-1]))
+    elif rhf_folder in line:
+        rhf_values.append(float(line.split()[-1]))
+
+# Calculate the difference between corresponding values
+differences = [ghf - rhf for ghf, rhf in zip(ghf_values, rhf_values)]
+
+# Write differences to a file
+with open(output_file, 'w') as f:
+    for difference in differences:
+        f.write(f"{difference:.15f}\n")
+
+print("Energy differences calculated and saved to energy_difference.txt.")
