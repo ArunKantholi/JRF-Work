@@ -1,18 +1,15 @@
 import os
 
-# Execute shell commands to extract data and save to files
 os.system('grep "(pre-RSP) Total:" *.out > ground_energy.out')
 os.system('grep "Excitation Energy" *.out > excitation_energy.out')
 os.system('grep "(pre-RSP) Spin Zeeman effect:" *.out > SpinZeemaneffect.out')
 
-# Initialize lists to store data
 lst0 = []
 lst1 = []
 lst2 = []
 lst3 = []
 lst4 = []
 
-# Read data from excitation_energy.out and populate lists
 try:
     with open('excitation_energy.out', 'r') as f:
         for line in f:
@@ -25,7 +22,6 @@ try:
 except FileNotFoundError:
     print("Error: excitation_energy.out not found.")
 
-# Read data from ground_energy.out and populate lst0
 try:
     with open('ground_energy.out', 'r') as f:
         for line in f:
@@ -35,14 +31,12 @@ try:
 except FileNotFoundError:
     print("Error: ground_energy.out not found.")
 
-# Calculate sums if both files were found
 if lst0 and lst1 and lst2 and lst3 and lst4:
     sums1 = [x + y for x, y in zip(lst0, lst1)]
     sums2 = [x + y for x, y in zip(lst0, lst2)]
     sums3 = [x + y for x, y in zip(lst0, lst3)]
     sums4 = [x + y for x, y in zip(lst0, lst4)]
 
-    # Write sums to Excited_state.txt
     with open('Excited_state.txt', 'w') as f:
         for i in range(len(sums1)):
             f.write(f"{sums1[i]:.15f} {sums2[i]:.15f} {sums3[i]:.15f} {sums4[i]:.15f}\n")
